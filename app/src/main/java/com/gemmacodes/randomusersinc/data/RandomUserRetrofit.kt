@@ -1,7 +1,6 @@
 package com.gemmacodes.randomusersinc.data
 
 import android.util.Log
-import org.koin.core.component.KoinComponent
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-class RandomUserRetrofit : KoinComponent {
+class RandomUserRetrofit {
 
     private val BASE_URL = "https://randomuser.me/api/"
     private val retrofit = createRetrofit()
