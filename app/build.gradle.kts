@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.androidx.navigation.compose)
 
     annotationProcessor(libs.androidx.room.compiler)
