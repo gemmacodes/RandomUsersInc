@@ -20,11 +20,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RandomUsersInc">
-        </activity>
-        <activity
-            android:name=".SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.RandomUsersInc">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

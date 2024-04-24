@@ -1,58 +1,71 @@
 package com.gemmacodes.randomusersinc.data
 
-import android.os.Parcelable
-import androidx.room.Entity
-import kotlinx.parcelize.Parcelize
+import com.gemmacodes.randomusersinc.data.room.User
 
 data class RandomUserResponse(
     val results: List<RandomUser>
 )
 
-@Entity
-@Parcelize
 data class RandomUser(
-    val id: Id,
-    val picture: Picture,
-    val name: Name,
     val gender: String,
+    val name: Name,
     val location: Location,
-    val phone: String,
     val email: String,
+    val street: Street,
     val registered: Registered,
-) : Parcelable
+    val phone: String,
+    val id: Id,
+    val picture: Picture
+) {
+    fun toUser(): User {
+        return with(this) {
+            User(
+                uuid = id.value,
+                gender = gender,
+                name = name.first,
+                surname = name.last,
+                streetName = location.street.name,
+                streetNumber = location.street.number,
+                city = location.city,
+                state = location.state,
+                email = email,
+                registeredDate = registered.date,
+                phone = phone,
+                pictureMedium = picture.medium,
+                pictureLarge = picture.large,
+            )
+        }
+    }
+}
 
-@Parcelize
 data class Name(
     val first: String,
     val last: String
-) : Parcelable
+)
 
-@Parcelize
-data class Picture(
-    val large: String,
-    val medium: String,
-    val thumbnail: String
-) : Parcelable
-
-@Parcelize
 data class Location(
     val street: Street,
     val city: String,
     val state: String,
-) : Parcelable
+)
 
-@Parcelize
 data class Street(
     val number: Int,
     val name: String
-) : Parcelable
+)
 
-@Parcelize
 data class Registered(
     val date: String,
-) : Parcelable
+)
 
-@Parcelize
 data class Id(
     val value: String
-) : Parcelable
+)
+
+data class Picture(
+    val large: String,
+    val medium: String,
+)
+
+
+
