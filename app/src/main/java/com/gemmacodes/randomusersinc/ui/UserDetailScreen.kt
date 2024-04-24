@@ -1,6 +1,5 @@
 package com.gemmacodes.randomusersinc.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,9 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,14 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.gemmacodes.randomusersinc.R
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
 import com.gemmacodes.randomusersinc.utils.toDate
@@ -105,31 +108,43 @@ fun UserCard(
             )
             Text(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .fillMaxWidth(),
                 text = "${userInfo.name} ${userInfo.surname}",
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
+            Text(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                text = "(${userInfo.gender})",
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center
+            )
 
             DataRow(
                 info = userInfo.email,
-                image = R.drawable.ic_baseline_email_24
+                contentDescription = "e-mail",
+                icon = Icons.Outlined.MailOutline,
             )
 
             DataRow(
                 info = userInfo.registeredDate.toDate(),
-                image = R.drawable.ic_baseline_date_range_24
+                contentDescription = "Registration date",
+                icon = Icons.Outlined.DateRange
             )
 
             DataRow(
                 info = "${userInfo.streetName} ${userInfo.streetNumber}, ${userInfo.city}, ${userInfo.state}",
-                image = R.drawable.ic_baseline_home_24
+                contentDescription = "Location",
+                icon = Icons.Outlined.Place
             )
 
             DataRow(
                 info = userInfo.phone,
-                image = R.drawable.ic_baseline_phone_24,
+                contentDescription = "Phone",
+                icon = Icons.Outlined.Phone,
             )
         }
     }
@@ -137,21 +152,20 @@ fun UserCard(
 
 @Composable
 private fun DataRow(
-    image: Int,
-    info: String
+    icon: ImageVector,
+    contentDescription: String? = null,
+    info: String,
 ) {
     Row(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(image),
-            contentDescription = "image",
-            contentScale = ContentScale.Fit,
+        Icon(
             modifier = Modifier
-                .size(50.dp)
-                .padding(10.dp)
-
+                .size(48.dp, 48.dp)
+                .padding(10.dp),
+            imageVector = icon,
+            contentDescription = contentDescription,
         )
         Column(
             Modifier.padding(end = 10.dp),

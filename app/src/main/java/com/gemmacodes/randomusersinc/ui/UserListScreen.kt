@@ -1,6 +1,5 @@
 package com.gemmacodes.randomusersinc.ui
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,14 +40,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.gemmacodes.randomusersinc.R
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
 import com.gemmacodes.randomusersinc.viewmodel.UserListUIState
@@ -175,7 +173,6 @@ private fun EmptyList(
 fun SearchBar(
     viewModel: UserListViewModel,
     modifier: Modifier = Modifier,
-    @DrawableRes vectorImageId: Int? = R.drawable.ic_baseline_search_24,
 ) {
     val searchText by viewModel.searchText.collectAsState("")
 
@@ -184,15 +181,13 @@ fun SearchBar(
         color = MaterialTheme.colorScheme.inversePrimary
     ) {
         Row(Modifier.padding(all = 15.dp)) {
-            if (vectorImageId != null) {
-                Icon(
-                    modifier = Modifier.size(24.dp, 24.dp),
-                    painter = painterResource(id = vectorImageId),
-                    contentDescription = null,
-                )
-                Spacer(Modifier.width(8.dp))
-            }
-            Row(
+            Icon(
+                modifier = Modifier.size(24.dp, 24.dp),
+                imageVector = Icons.Outlined.Search,
+                contentDescription = "Search"
+            )
+            Spacer(Modifier.width(8.dp))
+            Box(
                 Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically)
