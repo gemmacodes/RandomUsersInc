@@ -3,6 +3,7 @@ package com.gemmacodes.randomusersinc.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gemmacodes.randomusersinc.data.UserRepository
+import com.gemmacodes.randomusersinc.data.room.DeletedUser
 import com.gemmacodes.randomusersinc.data.room.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,16 +51,23 @@ class UserListViewModel(
                     e.message
                 }
                 .collect {
-                    it.forEach { user -> saveUser(user) }
+                    it.forEach { user ->
+                        if (isUserDeleted(user.uuid) == null) saveUser(user)
+                    }
                 }
         }
     }
 
     private suspend fun saveUser(user: User) = userRepository.addUser(user)
 
+    private suspend fun isUserDeleted(id: String) = userRepository.findDeletedUserById(id)
+
     fun deleteUser(user: User) {
         viewModelScope.launch {
-            userRepository.deleteUser(user)
+            with(userRepository) {
+                insertDeletedUserId(DeletedUser(user.uuid))
+                deleteUser(user)
+            }
         }
     }
 

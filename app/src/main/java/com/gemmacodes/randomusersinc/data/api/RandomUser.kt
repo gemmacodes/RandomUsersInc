@@ -1,4 +1,4 @@
-package com.gemmacodes.randomusersinc.data
+package com.gemmacodes.randomusersinc.data.api
 
 import com.gemmacodes.randomusersinc.data.room.User
 

@@ -17,10 +17,11 @@ object KoinGraph {
                 .fallbackToDestructiveMigration()
                 .build()
         }
-        single { get<UserDatabase>().randomUserDao() }
+        single { get<UserDatabase>().userDao() }
+        single { get<UserDatabase>().deletedUserDao() }
         single<RandomUserRetrofit.RandomUserService> { RandomUserRetrofit.service }
         single<RandomUserRetrofit.RandomUserService> { RandomUserRetrofit.service }
-        single<UserRepository> { UserRepository(get(), get()) }
+        single<UserRepository> { UserRepository(get(), get(), get()) }
     }
 
     val viewModelModule = module {

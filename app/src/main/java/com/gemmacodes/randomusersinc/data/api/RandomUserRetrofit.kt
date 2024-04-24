@@ -1,6 +1,5 @@
 package com.gemmacodes.randomusersinc.data.api
 
-import com.gemmacodes.randomusersinc.data.RandomUserResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

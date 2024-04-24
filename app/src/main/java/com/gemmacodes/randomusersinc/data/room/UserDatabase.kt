@@ -3,7 +3,8 @@ package com.gemmacodes.randomusersinc.data.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [User::class], version = 11)
-abstract class UserDatabase: RoomDatabase(){
-    abstract fun randomUserDao(): UserDao
+@Database(entities = [User::class, DeletedUser::class], version = 12)
+abstract class UserDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
+    abstract fun deletedUserDao(): DeletedUserDao
 }
