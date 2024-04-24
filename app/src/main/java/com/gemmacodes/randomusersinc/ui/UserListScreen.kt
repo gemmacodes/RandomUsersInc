@@ -2,6 +2,7 @@ package com.gemmacodes.randomusersinc.ui
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -164,9 +165,9 @@ private fun EmptyList(
             modifier = Modifier.padding(bottom = 10.dp),
         )
         LoadingButton(
-            text= "LOAD USERS",
+            text = "LOAD USERS",
             viewModel = viewModel,
-            )
+        )
     }
 }
 
@@ -198,9 +199,18 @@ fun SearchBar(
             ) {
                 BasicTextField(
                     value = searchText,
+                    singleLine = true,
                     textStyle = MaterialTheme.typography.bodyLarge,
                     onValueChange = { viewModel.onSearchTextChanged(it) },
                     cursorBrush = SolidColor(LocalContentColor.current),
+                    decorationBox = { innerTextField ->
+                        Box {
+                            innerTextField()
+                            if (searchText.isEmpty()) {
+                                Text("Search by name, surname or email")
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -259,7 +269,7 @@ private fun RandomUserCard(
                 ActionRow(
                     navigateToUserDetail = navigateToUserDetail,
                     onDelete = onDelete,
-                    )
+                )
             }
             GlideImage(
                 model = user.pictureMedium,
