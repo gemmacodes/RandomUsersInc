@@ -2,35 +2,49 @@ package com.gemmacodes.randomusersinc.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gemmacodes.randomusersinc.data.api.ApiHelper
-import com.gemmacodes.randomusersinc.data.room.DatabaseHelper
+import com.gemmacodes.randomusersinc.data.UserRepository
 import com.gemmacodes.randomusersinc.data.room.User
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class UserListViewModel(
-    private val apiHelper: ApiHelper,
-    private val dbHelper: DatabaseHelper
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    val userListUiState: StateFlow<UserListUIState> =
-        dbHelper.getAllUsers().map { UserListUIState(it) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = UserListUIState()
-            )
+    private val _searchText = MutableStateFlow("")
+    val searchText: StateFlow<String> = _searchText.asStateFlow()
 
+    fun onSearchTextChanged(text: String) {
+        _searchText.value = text
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val _userListUiState: StateFlow<UserListUIState> = _searchText.flatMapLatest { text ->
+        if(text == "") {
+            userRepository.getAllUsers().map { user -> UserListUIState(user) }
+        } else {
+            userRepository.getFilteredUsers(text).map { user -> UserListUIState(user) }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+        initialValue = UserListUIState()
+    )
+    val userListUiState: StateFlow<UserListUIState> = _userListUiState
 
     fun getNewUsersFromApi(amount: Int = 1) {
         viewModelScope.launch {
-            apiHelper.getUsers(amount)
+            userRepository.getUsers(amount)
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
                     e.message
@@ -41,11 +55,11 @@ class UserListViewModel(
         }
     }
 
-    private suspend fun saveUser(user: User) = dbHelper.addUser(user)
+    private suspend fun saveUser(user: User) = userRepository.addUser(user)
 
     fun deleteUser(user: User) {
         viewModelScope.launch {
-            dbHelper.deleteUser(user)
+            userRepository.deleteUser(user)
         }
     }
 

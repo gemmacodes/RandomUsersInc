@@ -19,6 +19,9 @@ interface UserDao {
     @Query("SELECT * from random_users ORDER BY name ASC")
     fun getAllUsers(): Flow<List<User>>
 
+    @Query("SELECT * from random_users WHERE name LIKE '%' || :filter || '%' OR surname LIKE '%' || :filter || '%' OR email LIKE '%' || :filter || '%'")
+    fun getFilteredUsers(filter: String): Flow<List<User>>
+
     @Delete
     suspend fun deleteUser(user: User)
 }

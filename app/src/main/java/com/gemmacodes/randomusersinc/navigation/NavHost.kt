@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.gemmacodes.randomusersinc.ui.UserDetailDestination
 import com.gemmacodes.randomusersinc.ui.UserDetailScreen
 import com.gemmacodes.randomusersinc.ui.UserListDestination
-import com.gemmacodes.randomusersinc.ui.RandomUserListScreen
+import com.gemmacodes.randomusersinc.ui.UserListScreen
 
 interface NavigationDestination {
     val route: String
@@ -29,7 +29,7 @@ fun NavHost(
         composable(
             route = UserListDestination.route,
         ) {
-            RandomUserListScreen(
+            UserListScreen(
                 navigation = navController,
             )
         }
