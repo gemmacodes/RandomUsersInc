@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 object RandomUserRetrofit {
 
-    private val BASE_URL = "https://randomuser.me/api/"
+    private const val BASE_URL = "https://randomuser.me/api/"
     private val retrofit = createRetrofit()
     val service: RandomUserService = retrofit.create(RandomUserService::class.java)
 

@@ -19,9 +19,8 @@ object KoinGraph {
         }
         single { get<UserDatabase>().userDao() }
         single { get<UserDatabase>().deletedUserDao() }
-        single<RandomUserRetrofit.RandomUserService> { RandomUserRetrofit.service }
-        single<RandomUserRetrofit.RandomUserService> { RandomUserRetrofit.service }
-        single<UserRepository> { UserRepository(get(), get(), get()) }
+        single<RandomUserRetrofit> { RandomUserRetrofit }
+        single<UserRepository> { UserRepository(get(), get()) }
     }
 
     val viewModelModule = module {

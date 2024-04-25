@@ -30,12 +30,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
+import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
 import com.gemmacodes.randomusersinc.utils.toDate
 import com.gemmacodes.randomusersinc.viewmodel.UserDetailViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -59,6 +62,7 @@ fun UserDetailScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             UserTopAppBar(
+                modifier = Modifier.testTag(UserDetailScreenTestTags.TOP_BAR),
                 title = "User details",
                 hasBackNavigation = true,
                 scrollBehavior = scrollBehavior,
@@ -84,6 +88,7 @@ fun UserCard(
 ) {
     Card(
         modifier = modifier
+            .testTag(UserDetailScreenTestTags.CARD)
             .padding(20.dp)
             .fillMaxSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -102,12 +107,14 @@ fun UserCard(
                 model = userInfo.pictureLarge,
                 contentDescription = "user pic",
                 modifier = Modifier
+                    .testTag(UserDetailScreenTestTags.PICTURE)
                     .padding(10.dp)
                     .size(200.dp)
                     .clip(CircleShape),
             )
             Text(
                 modifier = Modifier
+                    .testTag(UserDetailScreenTestTags.NAME)
                     .padding(5.dp)
                     .fillMaxWidth(),
                 text = "${userInfo.name} ${userInfo.surname}",
@@ -116,6 +123,7 @@ fun UserCard(
             )
             Text(
                 modifier = Modifier
+                    .testTag(UserDetailScreenTestTags.GENDER)
                     .padding(10.dp)
                     .fillMaxWidth(),
                 text = "(${userInfo.gender})",
@@ -124,24 +132,28 @@ fun UserCard(
             )
 
             DataRow(
+                modifier = Modifier.testTag(UserDetailScreenTestTags.EMAIL),
                 info = userInfo.email,
                 contentDescription = "e-mail",
                 icon = Icons.Outlined.MailOutline,
             )
 
             DataRow(
+                modifier = Modifier.testTag(UserDetailScreenTestTags.REGISTERED_DATE),
                 info = userInfo.registeredDate.toDate(),
                 contentDescription = "Registration date",
                 icon = Icons.Outlined.DateRange
             )
 
             DataRow(
+                modifier = Modifier.testTag(UserDetailScreenTestTags.LOCATION),
                 info = "${userInfo.streetName} ${userInfo.streetNumber}, ${userInfo.city}, ${userInfo.state}",
                 contentDescription = "Location",
                 icon = Icons.Outlined.Place
             )
 
             DataRow(
+                modifier = Modifier.testTag(UserDetailScreenTestTags.PHONE),
                 info = userInfo.phone,
                 contentDescription = "Phone",
                 icon = Icons.Outlined.Phone,
@@ -153,11 +165,12 @@ fun UserCard(
 @Composable
 private fun DataRow(
     icon: ImageVector,
-    contentDescription: String? = null,
     info: String,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
 ) {
     Row(
-        Modifier.fillMaxWidth(),
+        modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -174,4 +187,24 @@ private fun DataRow(
         }
 
     }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Preview
+@Composable
+private fun DetailCardPreview() {
+    UserCard(userInfo = fakeUser)
+}
+
+
+object UserDetailScreenTestTags {
+    const val TOP_BAR = "DetailList::Header"
+    const val CARD = "DetailList::Container"
+    const val PICTURE = "DetailList::Picture"
+    const val NAME = "DetailList::Name"
+    const val EMAIL = "DetailList::Email"
+    const val PHONE = "DetailList::Phone"
+    const val REGISTERED_DATE = "DetailList::RegisteredDate"
+    const val LOCATION = "DetailList::Location"
+    const val GENDER = "DetailList::Gender"
 }

@@ -40,7 +40,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -48,6 +50,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
+import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
 import com.gemmacodes.randomusersinc.viewmodel.UserListUIState
 import com.gemmacodes.randomusersinc.viewmodel.UserListViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -70,6 +73,7 @@ fun UserListScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             UserTopAppBar(
+                modifier = Modifier.testTag(UserListTestTags.TOP_BAR),
                 title = "User directory",
                 hasBackNavigation = false,
                 scrollBehavior = scrollBehavior,
@@ -79,7 +83,10 @@ fun UserListScreen(
         Column(
             modifier = Modifier.padding(innerPadding),
         ) {
-            SearchBar(viewModel = viewModel)
+            SearchBar(
+                modifier = Modifier.testTag(UserListTestTags.SEARCHBAR_CONTAINER),
+                viewModel = viewModel,
+            )
             Directory(
                 viewModel = viewModel,
                 navController = navigation,
@@ -128,8 +135,9 @@ private fun UserList(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items(state.userList) { user ->
-            RandomUserCard(
+            UserListCard(
                 modifier = Modifier
+                    .testTag(UserListTestTags.CARD)
                     .padding(vertical = 8.dp),
                 user = user,
                 navigateToUserDetail = {
@@ -139,6 +147,7 @@ private fun UserList(
         }
         item {
             LoadingButton(
+                modifier = Modifier.testTag(UserListTestTags.BUTTON),
                 text = "LOAD MORE USERS",
                 viewModel = viewModel,
             )
@@ -230,7 +239,7 @@ private fun LoadingButton(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun RandomUserCard(
+private fun UserListCard(
     user: User,
     navigateToUserDetail: () -> Unit,
     onDelete: () -> Unit,
@@ -256,11 +265,18 @@ private fun RandomUserCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    modifier = Modifier.testTag(UserListTestTags.NAME),
                     text = "${user.name} ${user.surname}",
                     style = MaterialTheme.typography.titleLarge
                 )
-                Text(text = user.email)
-                Text(text = user.phone)
+                Text(
+                    modifier = Modifier.testTag(UserListTestTags.EMAIL),
+                    text = user.email,
+                )
+                Text(
+                    modifier = Modifier.testTag(UserListTestTags.PHONE),
+                    text = user.phone,
+                )
                 ActionRow(
                     navigateToUserDetail = navigateToUserDetail,
                     onDelete = onDelete,
@@ -270,6 +286,7 @@ private fun RandomUserCard(
                 model = user.pictureMedium,
                 contentDescription = "user pic",
                 modifier = Modifier
+                    .testTag(UserListTestTags.PICTURE)
                     .size(75.dp)
                     .clip(CircleShape),
             )
@@ -285,6 +302,7 @@ private fun ActionRow(navigateToUserDetail: () -> Unit, onDelete: () -> Unit) {
         IconButton(
             onClick = { navigateToUserDetail() },
             modifier = Modifier
+                .testTag(UserListTestTags.INFO_ICON)
                 .clip(CircleShape)
         ) {
             Icon(
@@ -295,6 +313,7 @@ private fun ActionRow(navigateToUserDetail: () -> Unit, onDelete: () -> Unit) {
         IconButton(
             onClick = { onDelete() },
             modifier = Modifier
+                .testTag(UserListTestTags.DELETE_ICON)
                 .clip(CircleShape)
 
         ) {
@@ -304,4 +323,25 @@ private fun ActionRow(navigateToUserDetail: () -> Unit, onDelete: () -> Unit) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun UserListCardPreview() {
+    UserListCard(user = fakeUser, navigateToUserDetail = { }, onDelete = { })
+}
+
+
+object UserListTestTags {
+    const val TOP_BAR = "UserList::Header"
+    const val SEARCHBAR_CONTAINER = "UserList::DropdowContainer"
+    const val CARD = "UserList::Container"
+    const val PICTURE = "UserList::Picture"
+    const val NAME = "UserList::Name"
+    const val EMAIL = "UserList::Email"
+    const val PHONE = "UserList::Phone"
+    const val DELETE_ICON = "UserList::DeleteIcon"
+    const val INFO_ICON = "UserList::InfoIcon"
+    const val EMPTY_TEXT = "UserList::EmptyText"
+    const val BUTTON = "UserList::Button"
 }

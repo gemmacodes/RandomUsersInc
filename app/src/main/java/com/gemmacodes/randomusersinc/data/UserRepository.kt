@@ -1,19 +1,23 @@
 package com.gemmacodes.randomusersinc.data
 
 import android.util.Log
-import com.gemmacodes.randomusersinc.data.api.RandomUserRetrofit.RandomUserService
+import com.gemmacodes.randomusersinc.data.api.RandomUserRetrofit
 import com.gemmacodes.randomusersinc.data.room.DeletedUser
 import com.gemmacodes.randomusersinc.data.room.DeletedUserDao
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.data.room.UserDao
+import com.gemmacodes.randomusersinc.data.room.UserDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class UserRepository(
-    private val apiService: RandomUserService,
-    private val userDao: UserDao,
-    private val deletedUserDao: DeletedUserDao,
-): RemoteDataSource, LocalDataSource {
+    retrofit: RandomUserRetrofit,
+    database: UserDatabase,
+) : LocalDataSource, RemoteDataSource {
+
+    private val userDao: UserDao = database.userDao()
+    private val deletedUserDao: DeletedUserDao = database.deletedUserDao()
+    private val apiService = retrofit.service
 
     override fun getUsers(amount: Int): Flow<List<User>> = flow {
         val response = apiService.getRandomUsers(
@@ -33,13 +37,16 @@ class UserRepository(
 
     override fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
 
-    override fun getFilteredUsers(filter: String): Flow<List<User>> = userDao.getFilteredUsers(filter)
+    override fun getFilteredUsers(filter: String): Flow<List<User>> =
+        userDao.getFilteredUsers(filter)
 
     override suspend fun deleteUser(user: User) = userDao.deleteUser(user)
 
-    override suspend fun insertDeletedUserId(deletedId: DeletedUser) = deletedUserDao.insertDeletedUserId(deletedId)
+    override suspend fun insertDeletedUserId(id: DeletedUser) =
+        deletedUserDao.insertDeletedUserId(id)
 
-    override suspend fun findDeletedUserById(id: String): DeletedUser? = deletedUserDao.findDeletedUserById(id)
+    override suspend fun findDeletedUserById(id: String): DeletedUser? =
+        deletedUserDao.findDeletedUserById(id)
 
 }
 
@@ -53,6 +60,6 @@ interface LocalDataSource {
     fun getAllUsers(): Flow<List<User>>
     fun getFilteredUsers(filter: String): Flow<List<User>>
     suspend fun deleteUser(user: User)
-    suspend fun insertDeletedUserId(deletedId: DeletedUser)
+    suspend fun insertDeletedUserId(id: DeletedUser)
     suspend fun findDeletedUserById(id: String): DeletedUser?
 }
