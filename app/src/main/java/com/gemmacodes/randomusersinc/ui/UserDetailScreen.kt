@@ -38,6 +38,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
+import com.gemmacodes.randomusersinc.ui.theme.RandomUsersIncTheme
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
 import com.gemmacodes.randomusersinc.utils.toDate
 import com.gemmacodes.randomusersinc.viewmodel.UserDetailViewModel
@@ -118,7 +119,7 @@ fun UserCard(
                     .padding(5.dp)
                     .fillMaxWidth(),
                 text = "${userInfo.name} ${userInfo.surname}",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center
             )
             Text(
@@ -126,8 +127,8 @@ fun UserCard(
                     .testTag(UserDetailScreenTestTags.GENDER)
                     .padding(10.dp)
                     .fillMaxWidth(),
-                text = "(${userInfo.gender})",
-                style = MaterialTheme.typography.bodySmall,
+                text = "${userInfo.gender}",
+                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center
             )
 
@@ -183,7 +184,10 @@ private fun DataRow(
         Column(
             Modifier.padding(end = 10.dp),
         ) {
-            Text(text = info)
+            Text(
+                text = info,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
 
     }
@@ -193,7 +197,9 @@ private fun DataRow(
 @Preview
 @Composable
 private fun DetailCardPreview() {
-    UserCard(userInfo = fakeUser)
+    RandomUsersIncTheme {
+        UserCard(userInfo = fakeUser)
+    }
 }
 
 

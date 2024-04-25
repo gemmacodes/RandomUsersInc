@@ -50,6 +50,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
+import com.gemmacodes.randomusersinc.ui.theme.RandomUsersIncTheme
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
 import com.gemmacodes.randomusersinc.viewmodel.UserListUIState
 import com.gemmacodes.randomusersinc.viewmodel.UserListViewModel
@@ -204,14 +205,17 @@ fun SearchBar(
                 BasicTextField(
                     value = searchText,
                     singleLine = true,
-                    textStyle = MaterialTheme.typography.bodyLarge,
+                    textStyle = MaterialTheme.typography.bodyMedium,
                     onValueChange = { viewModel.onSearchTextChanged(it) },
                     cursorBrush = SolidColor(LocalContentColor.current),
                     decorationBox = { innerTextField ->
                         Box {
                             innerTextField()
                             if (searchText.isEmpty()) {
-                                Text("Search by name, surname or email")
+                                Text(
+                                    text = "Search by name, surname or email",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
                             }
                         }
                     }
@@ -267,15 +271,17 @@ private fun UserListCard(
                 Text(
                     modifier = Modifier.testTag(UserListTestTags.NAME),
                     text = "${user.name} ${user.surname}",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.testTag(UserListTestTags.EMAIL),
                     text = user.email,
+                    style = MaterialTheme.typography.bodySmall
                 )
                 Text(
                     modifier = Modifier.testTag(UserListTestTags.PHONE),
                     text = user.phone,
+                    style = MaterialTheme.typography.bodySmall
                 )
                 ActionRow(
                     navigateToUserDetail = navigateToUserDetail,
@@ -328,7 +334,9 @@ private fun ActionRow(navigateToUserDetail: () -> Unit, onDelete: () -> Unit) {
 @Preview
 @Composable
 private fun UserListCardPreview() {
-    UserListCard(user = fakeUser, navigateToUserDetail = { }, onDelete = { })
+    RandomUsersIncTheme {
+        UserListCard(user = fakeUser, navigateToUserDetail = { }, onDelete = { })
+    }
 }
 
 

@@ -12,6 +12,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.gemmacodes.randomusersinc.ui.theme.RandomUsersIncTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +26,12 @@ fun UserTopAppBar(
     navigateUp: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(title) },
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium,
+            )
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
@@ -42,4 +49,13 @@ fun UserTopAppBar(
             }
         }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun TopBarPreview() {
+    RandomUsersIncTheme {
+        UserTopAppBar(title = "Top bar", hasBackNavigation = true)
+    }
 }
