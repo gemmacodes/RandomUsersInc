@@ -2,7 +2,6 @@ package com.gemmacodes.randomusersinc.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -109,14 +108,13 @@ fun UserCard(
                 contentDescription = "user pic",
                 modifier = Modifier
                     .testTag(UserDetailScreenTestTags.PICTURE)
-                    .padding(10.dp)
                     .size(200.dp)
                     .clip(CircleShape),
             )
             Text(
                 modifier = Modifier
                     .testTag(UserDetailScreenTestTags.NAME)
-                    .padding(5.dp)
+                    .padding(top = 20.dp)
                     .fillMaxWidth(),
                 text = "${userInfo.name} ${userInfo.surname}",
                 style = MaterialTheme.typography.headlineMedium,
@@ -125,9 +123,9 @@ fun UserCard(
             Text(
                 modifier = Modifier
                     .testTag(UserDetailScreenTestTags.GENDER)
-                    .padding(10.dp)
+                    .padding(bottom = 30.dp)
                     .fillMaxWidth(),
-                text = "${userInfo.gender}",
+                text = userInfo.gender,
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center
             )
@@ -137,13 +135,6 @@ fun UserCard(
                 info = userInfo.email,
                 contentDescription = "e-mail",
                 icon = Icons.Outlined.MailOutline,
-            )
-
-            DataRow(
-                modifier = Modifier.testTag(UserDetailScreenTestTags.REGISTERED_DATE),
-                info = userInfo.registeredDate.toDate(),
-                contentDescription = "Registration date",
-                icon = Icons.Outlined.DateRange
             )
 
             DataRow(
@@ -159,6 +150,13 @@ fun UserCard(
                 contentDescription = "Phone",
                 icon = Icons.Outlined.Phone,
             )
+
+            DataRow(
+                modifier = Modifier.testTag(UserDetailScreenTestTags.REGISTERED_DATE),
+                info = userInfo.registeredDate.toDate(),
+                contentDescription = "Registration date",
+                icon = Icons.Outlined.DateRange
+            )
         }
     }
 }
@@ -170,26 +168,23 @@ private fun DataRow(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
-    Row(
-        modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier
+            .padding(bottom = 15.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
             modifier = Modifier
-                .size(48.dp, 48.dp)
-                .padding(10.dp),
+                .size(24.dp, 24.dp)
+                .padding(bottom = 5.dp),
             imageVector = icon,
             contentDescription = contentDescription,
         )
-        Column(
-            Modifier.padding(end = 10.dp),
-        ) {
-            Text(
-                text = info,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
+        Text(
+            text = info,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
