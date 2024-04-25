@@ -52,8 +52,8 @@ import com.gemmacodes.randomusersinc.data.room.User
 import com.gemmacodes.randomusersinc.navigation.NavigationDestination
 import com.gemmacodes.randomusersinc.ui.theme.RandomUsersIncTheme
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
-import com.gemmacodes.randomusersinc.viewmodel.UserListUIState
-import com.gemmacodes.randomusersinc.viewmodel.UserListViewModel
+import com.gemmacodes.randomusersinc.ui.viewmodels.UserListUIState
+import com.gemmacodes.randomusersinc.ui.viewmodels.UserListViewModel
 import org.koin.androidx.compose.koinViewModel
 
 

@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.MailOutline
@@ -40,7 +42,7 @@ import com.gemmacodes.randomusersinc.navigation.NavigationDestination
 import com.gemmacodes.randomusersinc.ui.theme.RandomUsersIncTheme
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
 import com.gemmacodes.randomusersinc.utils.toDate
-import com.gemmacodes.randomusersinc.viewmodel.UserDetailViewModel
+import com.gemmacodes.randomusersinc.ui.viewmodels.UserDetailViewModel
 import org.koin.androidx.compose.koinViewModel
 
 object UserDetailDestination : NavigationDestination {
@@ -99,7 +101,8 @@ fun UserCard(
         Column(
             modifier = modifier
                 .padding(20.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

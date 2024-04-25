@@ -1,4 +1,4 @@
-package com.gemmacodes.randomusersinc.viewmodel
+package com.gemmacodes.randomusersinc.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

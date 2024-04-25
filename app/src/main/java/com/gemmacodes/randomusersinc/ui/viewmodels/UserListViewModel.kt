@@ -1,5 +1,6 @@
-package com.gemmacodes.randomusersinc.viewmodel
+package com.gemmacodes.randomusersinc.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gemmacodes.randomusersinc.data.UserRepository
@@ -48,10 +49,11 @@ class UserListViewModel(
             userRepository.getUsers(amount)
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
-                    e.message
+                    Log.e("getNewUsersFromApi", "Error: ${e.message}", e)
                 }
                 .collect {
                     it.forEach { user ->
+                        //isUserDeleted(user.uuid) ?: saveUser(user)
                         if (isUserDeleted(user.uuid) == null) saveUser(user)
                     }
                 }
@@ -59,7 +61,6 @@ class UserListViewModel(
     }
 
     private suspend fun saveUser(user: User) = userRepository.addUser(user)
-
     private suspend fun isUserDeleted(id: String) = userRepository.findDeletedUserById(id)
 
     fun deleteUser(user: User) {

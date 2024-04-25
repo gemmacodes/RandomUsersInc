@@ -12,7 +12,7 @@ import com.gemmacodes.randomusersinc.data.room.UserDatabase
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser2
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -47,8 +47,8 @@ class UserDaoTest {
     @Throws(Exception::class)
     fun WHEN_addUser_THEN_insertsUserIntoDB() = runBlocking {
         addOneUserToDb(fakeUser)
-        val allItems = getUsersFromDb().last()
-        assertEquals(allItems, listOf(fakeUser))
+        val allItems = getUsersFromDb().first()
+        assertEquals(listOf(fakeUser), allItems)
     }
 
     @Test
@@ -57,9 +57,9 @@ class UserDaoTest {
         addOneUserToDb(fakeUser)
         addOneUserToDb(fakeUser2)
 
-        val allItems = getUsersFromDb().last()
+        val allItems = getUsersFromDb().first()
 
-        assertEquals(allItems, listOf(fakeUser, fakeUser2))
+        assertEquals(listOf(fakeUser, fakeUser2), allItems)
     }
 
     @Test
@@ -68,25 +68,26 @@ class UserDaoTest {
         addOneUserToDb(fakeUser)
         deleteUserToDb(fakeUser)
 
-        val allItems = getUsersFromDb().last()
+        val allItems = getUsersFromDb().first()
         val deletedUser = deletedUserDao.findDeletedUserById(fakeUser.uuid)
 
-        assertEquals(allItems, emptyList<User>())
-        assertEquals(deletedUser, DeletedUser(fakeUser.uuid))
+        assertEquals(emptyList<User>(), allItems)
+        assertEquals(DeletedUser(fakeUser.uuid), deletedUser)
     }
 
     @Test
     @Throws(Exception::class)
-    fun GIVEN_deletedUser_WHEN_addingSameUser_THEN_UserNotAddedToDB() = runBlocking {
+    fun GIVEN_deletedUser_WHEN_sameUserAdded_THEN_UserNotAddedToDB() = runBlocking {
         addOneUserToDb(fakeUser)
         deleteUserToDb(fakeUser)
-        addOneUserToDb(fakeUser)
 
-        val allItems = getUsersFromDb().last()
         val deletedUser = findDeletedUser(fakeUser.uuid)
+        if (deletedUser == null) addOneUserToDb(fakeUser)
 
-        assertEquals(allItems, emptyList<User>())
-        assertEquals(deletedUser, DeletedUser(fakeUser.uuid))
+        val allItems = getUsersFromDb().first()
+
+        assertEquals(emptyList<User>(), allItems)
+        assertEquals(DeletedUser(fakeUser.uuid), deletedUser)
     }
 
     @Test
@@ -95,7 +96,7 @@ class UserDaoTest {
         addOneUserToDb(fakeUser)
         addOneUserToDb(fakeUser)
 
-        val allItems = getUsersFromDb().last()
+        val allItems = getUsersFromDb().first()
 
         assertEquals(allItems, listOf(fakeUser))
     }

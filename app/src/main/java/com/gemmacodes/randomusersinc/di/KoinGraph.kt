@@ -4,8 +4,8 @@ import androidx.room.Room
 import com.gemmacodes.randomusersinc.data.UserRepository
 import com.gemmacodes.randomusersinc.data.api.RandomUserRetrofit
 import com.gemmacodes.randomusersinc.data.room.UserDatabase
-import com.gemmacodes.randomusersinc.viewmodel.UserDetailViewModel
-import com.gemmacodes.randomusersinc.viewmodel.UserListViewModel
+import com.gemmacodes.randomusersinc.ui.viewmodels.UserDetailViewModel
+import com.gemmacodes.randomusersinc.ui.viewmodels.UserListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
