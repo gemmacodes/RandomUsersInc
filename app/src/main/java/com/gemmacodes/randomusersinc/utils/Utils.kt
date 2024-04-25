@@ -28,4 +28,20 @@ object FakeData {
         pictureMedium = "https://randomuser.me/api/portraits/med/women/96.jpg",
         pictureLarge = "https://randomuser.me/api/portraits/women/96.jpg",
     )
+
+    val fakeUser2 = User(
+        uuid = "0001",
+        registeredDate = "2018-10-20T05:34:45.913Z",
+        name = "John",
+        surname = "Doe",
+        gender = "male",
+        streetName = "Street",
+        streetNumber = 123,
+        city = "City",
+        state = "State",
+        email = "john@doe.com",
+        phone = "012 345 67 89",
+        pictureMedium = "https://randomuser.me/api/portraits/med/women/96.jpg",
+        pictureLarge = "https://randomuser.me/api/portraits/women/96.jpg",
+    )
 }
