@@ -1,26 +1,25 @@
 package com.gemmacodes.randomusersinc.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gemmacodes.randomusersinc.data.UserRepository
-import com.gemmacodes.randomusersinc.data.room.DeletedUser
 import com.gemmacodes.randomusersinc.data.room.User
-import kotlinx.coroutines.Dispatchers
+import com.gemmacodes.randomusersinc.usecase.DeleteUser
+import com.gemmacodes.randomusersinc.usecase.ListUsers
+import com.gemmacodes.randomusersinc.usecase.RequestNewUsers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class UserListViewModel(
-    private val userRepository: UserRepository,
+    private val listUsers: ListUsers,
+    private val requestNewUsers: RequestNewUsers,
+    private val deleteUser: DeleteUser,
 ) : ViewModel() {
 
     private val _searchText = MutableStateFlow("")
@@ -32,11 +31,7 @@ class UserListViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _userListUiState: StateFlow<UserListUIState> = _searchText.flatMapLatest { text ->
-        if(text == "") {
-            userRepository.getAllUsers().map { user -> UserListUIState(user) }
-        } else {
-            userRepository.getFilteredUsers(text).map { user -> UserListUIState(user) }
-        }
+        listUsers.listUsers(text).map { user -> UserListUIState(user) }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -44,31 +39,15 @@ class UserListViewModel(
     )
     val userListUiState: StateFlow<UserListUIState> = _userListUiState
 
-    fun getNewUsersFromApi(amount: Int = 1) {
+    fun requestNewUsers(amount: Int = 1) {
         viewModelScope.launch {
-            userRepository.getUsers(amount)
-                .flowOn(Dispatchers.IO)
-                .catch { e ->
-                    Log.e("getNewUsersFromApi", "Error: ${e.message}", e)
-                }
-                .collect {
-                    it.forEach { user ->
-                        //isUserDeleted(user.uuid) ?: saveUser(user)
-                        if (isUserDeleted(user.uuid) == null) saveUser(user)
-                    }
-                }
+            requestNewUsers.requestNewUsers(amount)
         }
     }
 
-    private suspend fun saveUser(user: User) = userRepository.addUser(user)
-    private suspend fun isUserDeleted(id: String) = userRepository.findDeletedUserById(id)
-
     fun deleteUser(user: User) {
         viewModelScope.launch {
-            with(userRepository) {
-                insertDeletedUserId(DeletedUser(user.uuid))
-                deleteUser(user)
-            }
+            deleteUser.deleteUser(user)
         }
     }
 

@@ -101,12 +101,15 @@ class UserDaoTest {
         assertEquals(allItems, listOf(fakeUser))
     }
 
-    private suspend fun addOneUserToDb(user:User) = userDao.addUser(user)
-    private suspend fun deleteUserToDb(user:User) {
+    private suspend fun addOneUserToDb(user: User) = userDao.addUser(user)
+
+    private suspend fun deleteUserToDb(user: User) {
         userDao.deleteUser(user)
         deletedUserDao.insertDeletedUserId(DeletedUser(user.uuid))
     }
-    private suspend fun findDeletedUser(id:String) = deletedUserDao.findDeletedUserById(id)
+
+    private suspend fun findDeletedUser(id: String) = deletedUserDao.findDeletedUserById(id)
+
     private fun getUsersFromDb() = userDao.getAllUsers()
 
 }

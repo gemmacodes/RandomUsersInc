@@ -232,7 +232,7 @@ private fun LoadingButton(
     modifier: Modifier = Modifier,
 ) {
     Button(
-        onClick = { viewModel.getNewUsersFromApi() },
+        onClick = { viewModel.requestNewUsers() },
         shape = CutCornerShape(topStart = 8.dp, bottomEnd = 8.dp),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
         modifier = modifier.fillMaxWidth(),
