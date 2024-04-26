@@ -36,7 +36,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 
@@ -66,10 +65,8 @@ class NavigationTest {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun userListScreen_ClickOnUserItem_NavigatesToDetailScreen() {
-        `when`(remoteDataSource.getUsers(1)).thenReturn(flowOf(listOf(fakeUser)))
         `when`(localDataSource.getUser(fakeUser.uuid)).thenReturn(flowOf(fakeUser))
         `when`(localDataSource.getAllUsers()).thenReturn(flowOf(listOf(fakeUser)))
-        `when`(localDataSource.getFilteredUsers(anyString())).thenReturn(flowOf(listOf(fakeUser)))
 
         savedStateHandle = SavedStateHandle().apply { set("userId", fakeUser.uuid) }
         userListViewModel = UserListViewModel(
