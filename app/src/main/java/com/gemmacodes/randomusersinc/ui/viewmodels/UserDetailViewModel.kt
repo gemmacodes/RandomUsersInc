@@ -18,7 +18,7 @@ class UserDetailViewModel(
     private val userId = savedStateHandle.get<String>("userId")
 
     val userUiState: StateFlow<UserUIState> =
-        requestUserDetail.requestUserDetail(userId!!).map { UserUIState(it) }
+        requestUserDetail.requestUserDetail(userId).map { UserUIState(it) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
