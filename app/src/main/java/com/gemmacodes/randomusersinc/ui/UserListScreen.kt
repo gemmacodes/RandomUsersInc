@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.gemmacodes.randomusersinc.data.room.User
@@ -64,7 +63,7 @@ object UserListDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserListScreen(
-    navigation: NavHostController,
+    navigateToDetail: (userId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UserListViewModel = koinViewModel(),
 ) {
@@ -90,7 +89,7 @@ fun UserListScreen(
             )
             Directory(
                 viewModel = viewModel,
-                navController = navigation,
+                navigateToDetail = navigateToDetail,
             )
         }
 
@@ -99,7 +98,7 @@ fun UserListScreen(
 
 @Composable
 private fun Directory(
-    navController: NavHostController,
+    navigateToDetail: (userId: String) -> Unit,
     viewModel: UserListViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -119,7 +118,7 @@ private fun Directory(
                 .fillMaxSize(),
             state = state,
             viewModel = viewModel,
-            navController = navController,
+            navigateToDetail = navigateToDetail,
         )
     }
 }
@@ -128,7 +127,7 @@ private fun Directory(
 private fun UserList(
     modifier: Modifier,
     state: UserListUIState,
-    navController: NavHostController,
+    navigateToDetail: (userId: String) -> Unit,
     viewModel: UserListViewModel,
 ) {
     LazyColumn(
@@ -141,14 +140,11 @@ private fun UserList(
                     .testTag(UserListTestTags.CARD)
                     .padding(vertical = 8.dp),
                 user = user,
-                navigateToUserDetail = {
-                    navController.navigate("detail/${user.uuid}")
-                },
+                navigateToUserDetail = { navigateToDetail(user.uuid) },
                 onDelete = { viewModel.deleteUser(user) })
         }
         item {
             LoadingButton(
-                modifier = Modifier.testTag(UserListTestTags.BUTTON),
                 text = "LOAD MORE USERS",
                 viewModel = viewModel,
             )
@@ -170,7 +166,9 @@ private fun EmptyList(
             text = "Oops! No users available",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 10.dp),
+            modifier = Modifier
+                .testTag(UserListTestTags.EMPTY_TEXT)
+                .padding(bottom = 10.dp),
         )
         LoadingButton(
             text = "LOAD USERS",
@@ -235,7 +233,9 @@ private fun LoadingButton(
         onClick = { viewModel.requestNewUsers() },
         shape = CutCornerShape(topStart = 8.dp, bottomEnd = 8.dp),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .testTag(UserListTestTags.BUTTON)
+            .fillMaxWidth(),
     ) {
         Text(text)
     }

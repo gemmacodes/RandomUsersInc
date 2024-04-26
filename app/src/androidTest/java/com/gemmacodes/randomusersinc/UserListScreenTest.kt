@@ -13,7 +13,7 @@ import com.gemmacodes.randomusersinc.usecase.DeleteUser
 import com.gemmacodes.randomusersinc.usecase.ListUsers
 import com.gemmacodes.randomusersinc.usecase.RequestNewUsers
 import com.gemmacodes.randomusersinc.utils.FakeData.fakeUser
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,9 +41,6 @@ class UserListScreenTest {
             RequestNewUsers(remoteDataSource, localDataSource),
             DeleteUser(localDataSource)
         )
-        /*        composeTestRule.setContent {
-                    UserListScreen(navigateToDetail = {}, viewModel = userListViewModel)
-                }*/
     }
 
     @Test
@@ -70,7 +67,7 @@ class UserListScreenTest {
 
     @Test
     fun WHEN_userListScreen_THEN_ContentDisplayed() {
-        `when`(localDataSource.getAllUsers()).thenReturn(MutableStateFlow(listOf(fakeUser)))
+        `when`(localDataSource.getAllUsers()).thenReturn(flowOf(listOf(fakeUser)))
 
         with(composeTestRule) {
             setContent {

@@ -46,7 +46,7 @@ import com.gemmacodes.randomusersinc.ui.viewmodels.UserDetailViewModel
 import org.koin.androidx.compose.koinViewModel
 
 object UserDetailDestination : NavigationDestination {
-    override val route = "detail/{userId}"
+    override val route = "detail"
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)

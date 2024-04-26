@@ -30,11 +30,11 @@ fun NavHost(
             route = UserListDestination.route,
         ) {
             UserListScreen(
-                navigation = navController,
+                navigateToDetail = { userId -> navController.navigate("detail/$userId") }
             )
         }
         composable(
-            route = UserDetailDestination.route,
+            route = "${UserDetailDestination.route}/{userId}",
             arguments = listOf(navArgument("userId") { type = NavType.StringType })
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("userId")?.let {
