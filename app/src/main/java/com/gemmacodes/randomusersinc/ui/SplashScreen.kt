@@ -11,8 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -20,18 +18,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gemmacodes.randomusersinc.R
+import com.gemmacodes.randomusersinc.navigation.NavigationDestination
 import kotlinx.coroutines.delay
+
+object SplashScreenDestination : NavigationDestination {
+    override val route = "splash"
+}
 
 @Composable
 fun SplashScreen(
-    onTimeout: () -> Unit,
+    navigateToList: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val currentOnTimeout by rememberUpdatedState(onTimeout)
 
     LaunchedEffect(Unit) {
         delay(2000)
-        currentOnTimeout()
+        navigateToList()
     }
 
     Column(

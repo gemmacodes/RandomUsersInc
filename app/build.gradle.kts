@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-    ksp(libs.androidx.room.compiler.v250)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
