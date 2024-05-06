@@ -34,7 +34,6 @@ class UserDetailViewModelTest {
 
     @Before
     fun setUp() {
-        savedStateHandle = SavedStateHandle().apply { set("userId", fakeUser.uuid) }
         localDataSource = mock(LocalDataSource::class.java)
         requestUserDetail = RequestUserDetail(localDataSource)
     }
@@ -43,6 +42,7 @@ class UserDetailViewModelTest {
     fun `GIVEN userId WHEN detail requested THEN userUIState updated`() = runTest {
         `when`(localDataSource.getUser(fakeUser.uuid)).thenReturn(flowOf(fakeUser))
 
+        savedStateHandle = SavedStateHandle().apply { set("userId", fakeUser.uuid) }
         userDetailViewModel = UserDetailViewModel(requestUserDetail, savedStateHandle)
 
         val uiState = mutableListOf<UserUIState>()
@@ -57,6 +57,8 @@ class UserDetailViewModelTest {
 
     @Test(expected = NullPointerException::class)
     fun `GIVEN null userId WHEN detail requested THEN exception thrown`() {
+        savedStateHandle = mock(SavedStateHandle::class.java)
+
         `when`(savedStateHandle.get<String>("userId")).thenReturn(null)
         `when`(requestUserDetail.requestUserDetail(null)).thenThrow(NullPointerException())
 

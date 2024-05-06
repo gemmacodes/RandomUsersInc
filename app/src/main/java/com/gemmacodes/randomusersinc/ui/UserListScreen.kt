@@ -33,7 +33,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -182,7 +181,7 @@ fun SearchBar(
     viewModel: UserListViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val searchText by viewModel.searchText.collectAsState("")
+    val searchText by viewModel.searchText.collectAsStateWithLifecycle("")
 
     Surface(
         modifier = modifier,
