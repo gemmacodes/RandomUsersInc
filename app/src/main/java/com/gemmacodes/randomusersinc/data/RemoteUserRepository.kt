@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 
 interface RemoteDataSource {
-    fun getUsers(amount: Int): Flow<List<User>>
+    suspend fun getUsers(amount: Int): Flow<List<User>>
 }
 
 class RemoteUserRepository(
@@ -16,13 +16,13 @@ class RemoteUserRepository(
 
     private val apiService = retrofit.service
 
-    override fun getUsers(amount: Int): Flow<List<User>> = flow {
+    override suspend fun getUsers(amount: Int): Flow<List<User>> {
         val response = apiService.getRandomUsers(
             "picture,name,phone,email,gender,location,registered,id",
             amount,
         )
         if (response.isSuccessful) {
-            response.body()!!.results.map { user -> user.toUser() }.let { emit(it) }
+            return flow { response.body()!!.results.map { user -> user.toUser() }.let { emit(it) }}
         } else {
             throw HttpException(response)
         }
